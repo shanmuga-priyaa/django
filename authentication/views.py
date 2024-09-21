@@ -2,9 +2,13 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from .models import * 
+from django.views import View
 
-def loginpage(request):
-    if request.method == 'POST':
+
+class AuthLoginpageview(View):
+    def get(self,request):
+        return render(request,'loginpage.html')
+    def post(self,request):
         print(request.POST)
         user_data = authenticate(username=request.POST['username'], password= request.POST['password'])
         print(user_data)
@@ -15,15 +19,17 @@ def loginpage(request):
         else:
             msg={"error":"Invalid username or password"}
             return render(request,'loginpage.html',msg)
-        
-    return render(request,'loginpage.html')
+#____________________________________________________________________________________________________________________________________
 
-def logoutpage(request):
-    logout(request)
-    return redirect('/')
-
-def signuppage(request):
-    if request.method == 'POST':
+class AuthLogoutpageview(View):
+    def get(self,request):
+        logout(request)
+        return redirect('/')
+#________________________________________________________________________________________________________________________________________
+class AuthSignuppageview(View):
+    def get(self,request):
+        return render(request,'Signup.html')
+    def post(self,request):
         print(request.POST)
         # Extracting user information from the POST request
         email = request.POST['email']
@@ -47,10 +53,13 @@ def signuppage(request):
             # Handle the error (e.g., user already exists)
             msg = {"error": "Failed to create an account. Please try again."}
             return render(request, 'Signup.html', msg)
-        
+
 #______________________________________________________________________________________
-def signuppage(request):
-    if request.method == 'POST':
+
+class AuthSignuppageView(View):
+    def get(self, request):
+        return render(request, 'Signup.html')
+    def post(self, request):
         user_check = User_details.objects.filter(username=request.POST['username'])
         print(user_check)
         if len(user_check)>0:
@@ -67,6 +76,5 @@ def signuppage(request):
         new_user.set_password(request.POST['password']) 
         new_user.save()
         return redirect("/")
-    return render(request, 'Signup.html')
 
  

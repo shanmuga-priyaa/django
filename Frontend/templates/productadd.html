@@ -61,7 +61,7 @@
     }
 </style>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     <h1>Product Add</h1>
     {% csrf_token %}
     {{ proForm }}
